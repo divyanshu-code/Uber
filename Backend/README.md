@@ -1,7 +1,9 @@
-# User Registration Endpoint Documentation
+# User Endpoints Documentation
 
 ## Endpoint
 
+
+### Register
 `POST /users/register`
 
 ## Description
@@ -90,4 +92,92 @@ The endpoint expects a JSON object with the following structure:
 
 ## Notes
 - Passwords are securely hashed before storing.
+- The response includes a JWT token for authentication.
+
+
+---
+
+### Login
+`POST /users/login`
+
+## Description
+Authenticates a user and returns a JWT token if credentials are valid.
+
+## Request Body
+The endpoint expects a JSON object with the following structure:
+
+```
+{
+  "email": "string (valid email)",
+  "password": "string"
+}
+```
+
+### Example
+```
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123"
+}
+```
+
+## Validation
+- `email`: Must be a valid email address.
+- `password`: Required.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "token": "<JWT token>",
+    "user": {
+      "_id": "<user id>",
+      "fullname": {
+        "firstname": "John",
+        "lastname": "Doe"
+      },
+      "email": "john.doe@example.com"
+      // other user fields
+    }
+  }
+  ```
+
+### Validation Error
+- **Status Code:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message",
+        "param": "field name",
+        "location": "body"
+      }
+      // ...more errors
+    ]
+  }
+  ```
+
+### User Not Found
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "User not found"
+  }
+  ```
+
+### Invalid Password
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Invalid Password"
+  }
+  ```
+
+## Notes
 - The response includes a JWT token for authentication.
