@@ -181,3 +181,77 @@ The endpoint expects a JSON object with the following structure:
 
 ## Notes
 - The response includes a JWT token for authentication.
+
+---
+
+### Profile
+`GET /users/profile`
+
+## Description
+Returns the authenticated user's profile information.
+
+## Authentication
+Requires a valid JWT token (sent via Authorization header or cookie).
+
+## Request
+No request body required. Token must be provided.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "_id": "<user id>",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+    // other user fields
+  }
+  ```
+
+### Unauthorized
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
+
+---
+
+### Logout
+`GET /users/logout`
+
+## Description
+Logs out the authenticated user by clearing the JWT token and blacklisting it.
+
+## Authentication
+Requires a valid JWT token (sent via Authorization header or cookie).
+
+## Request
+No request body required. Token must be provided.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logout successful"
+  }
+  ```
+
+### Unauthorized
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
