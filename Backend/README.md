@@ -366,3 +366,176 @@ The endpoint expects a JSON object with the following structure:
 ## Notes
 - Passwords are securely hashed before storing.
 - The response includes a JWT token for authentication.
+
+---
+
+### Captain Login
+`POST /captains/login`
+
+## Description
+Authenticates a captain and returns a JWT token if credentials are valid.
+
+## Request Body
+The endpoint expects a JSON object with the following structure:
+
+```
+{
+  "email": "string (valid email)",
+  "password": "string (min 6 chars)"
+}
+```
+
+### Example
+```
+{
+  "email": "alice.smith@example.com",
+  "password": "strongPassword123"
+}
+```
+
+## Validation
+- `email`: Must be a valid email address.
+- `password`: Minimum 6 characters.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "token": "<JWT token>",
+    "captain": {
+      "_id": "<captain id>",
+      "fullname": {
+        "firstname": "Alice",
+        "lastname": "Smith"
+      },
+      "email": "alice.smith@example.com",
+      "vechicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "type": "car"
+      }
+      // other captain fields
+    }
+  }
+  ```
+
+### Validation Error
+- **Status Code:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message",
+        "param": "field name",
+        "location": "body"
+      }
+      // ...more errors
+    ]
+  }
+  ```
+
+### Invalid Email
+- **Status Code:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "message": "Invalid email"
+  }
+  ```
+
+### Invalid Password
+- **Status Code:** `400 Bad Request`
+- **Body:**
+  ```json
+  {
+    "message": "Invalid password"
+  }
+  ```
+
+## Notes
+- The response includes a JWT token for authentication.
+
+---
+
+### Captain Profile
+`GET /captains/profile`
+
+## Description
+Returns the authenticated captain's profile information.
+
+## Authentication
+Requires a valid JWT token (sent via Authorization header or cookie).
+
+## Request
+No request body required. Token must be provided.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "_id": "<captain id>",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vechicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "type": "car"
+    }
+    // other captain fields
+  }
+  ```
+
+### Unauthorized
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorizied access"
+  }
+  ```
+
+---
+
+### Captain Logout
+`GET /captains/logout`
+
+## Description
+Logs out the authenticated captain by clearing the JWT token and blacklisting it.
+
+## Authentication
+Requires a valid JWT token (sent via Authorization header or cookie).
+
+## Request
+No request body required. Token must be provided.
+
+## Responses
+
+### Success
+- **Status Code:** `200 OK`
+- **Body:**
+  ```json
+  {
+    "message": "Logout successfully"
+  }
+  ```
+
+### Unauthorized
+- **Status Code:** `401 Unauthorized`
+- **Body:**
+  ```json
+  {
+    "message": "Unauthorizied access"
+  }
+  ```
