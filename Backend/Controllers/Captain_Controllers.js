@@ -11,7 +11,7 @@ module.exports.registerCaptain = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { fullname, email, password, vechicle } = req.body;
+    const { fullname, email, password, vehicle } = req.body;
 
     const iscaptainExists = await captainmodel.findOne({ email });
     if (iscaptainExists) {
@@ -25,10 +25,10 @@ module.exports.registerCaptain = async (req, res) => {
         lastname: fullname.lastname,
         email,
         password: hashedPassword,
-        color: vechicle.color,
-        plate: vechicle.plate,
-        capacity: vechicle.capacity,
-        type: vechicle.type
+        color: vehicle.color,
+        plate: vehicle.plate,
+        capacity: vehicle.capacity,
+        type: vehicle.type
     });
 
     const token = captain.generateAuthToken();

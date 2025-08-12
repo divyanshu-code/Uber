@@ -10,7 +10,7 @@ const cookie = require('cookie-parser')
 
 connectDB()                                         // connect to the database
 
-app.use(cors())
+app.use(cors())                                    // it is used to allow  the cross-origin requests
 app.use(express.json())                            // it is used to parse the json data from the request body
 app.use(express.urlencoded({ extended: true }))    // it is used to parse the urlencoded data from the request body      
 app.use(cookie())                                  // it is used to parse the cookies from the request headers

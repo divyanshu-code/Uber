@@ -44,7 +44,7 @@ const captainSchema = new mongoose.Schema({
 
     },
 
-    vechicle: {
+    vehicle: {
 
         color: {
             type: String,
