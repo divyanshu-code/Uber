@@ -23,7 +23,7 @@ const UserLogin = () => {
 
     const response =await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, newUser)
 
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status < 300) {
       const data = response.data;
 
       setuser(data.user);

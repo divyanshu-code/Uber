@@ -26,17 +26,24 @@ const UserSignup = () => {
       password: password
     }
 
+    try {
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
 
-    if (response.status === 200) {
+    if (response.status >= 200 && response.status < 300) {
 
       const data = response.data;
 
       setuser(data.user)
+      localStorage.setItem('token', data.token);
 
       navigate('/Home')
 
     }
+  } catch (error) {
+      if (error.response) {
+        console.error("Registration failed:", error.response.data);
+
+      }}
 
     setEmail('')
     setFirstName('')
