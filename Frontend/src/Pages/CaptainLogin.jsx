@@ -24,8 +24,6 @@ const UserLogin = () => {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`, captainData);
 
-      console.log("Response:", response.data);
-
       if (response.status >= 200 && response.status < 300) {
         const data = response.data;
         setcaptain(data.captain);
