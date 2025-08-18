@@ -7,7 +7,7 @@ const WaitingForDriver = (props) => {
                 <h2
                     onClick={() => {
                         props.setwaitingfordriver(false)
-                    }} className='text-center w-[93%] top-0 absolute'><i className="text-gray-200 text-2xl ri-arrow-down-wide-fill"></i></h2>
+                    }} className='text-center w-[93%] top-0 absolute'><i className="text-gray-300 text-2xl ri-arrow-down-wide-fill"></i></h2>
 
 
                 <div className='flex items-center justify-between mt-7 '>
@@ -44,7 +44,6 @@ const WaitingForDriver = (props) => {
                         </div>
 
                     </div>
-
                 </div>
             </div>
         </>

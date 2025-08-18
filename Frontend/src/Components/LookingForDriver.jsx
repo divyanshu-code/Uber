@@ -6,7 +6,7 @@ const LookingForDriver = (props) => {
             <div>
                 <h2 onClick={()=>{
                     props.setdriver(false) 
-                }} className='text-center w-[93%] top-0 absolute'><i className="text-gray-200 text-2xl ri-arrow-down-wide-fill"></i></h2>
+                }} className='text-center w-[93%] top-0 absolute'><i className="text-gray-300 text-2xl ri-arrow-down-wide-fill"></i></h2>
                 <h3 className='font-semibold mt-10 text-2xl '>Looking for driver</h3>
 
                 <div className='flex flex-col gap-2 items-center'>
