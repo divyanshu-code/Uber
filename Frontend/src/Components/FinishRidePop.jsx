@@ -1,21 +1,19 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react'
+import { Link } from 'react-router-dom';
 
-const ConRidePopUp = (props) => {
 
-     const [otp, setotp] = useState('')
+const FinishRidePop = (props) => {
 
-     const submithandler = (e)=>{
-            e.preventDefault();
-            setotp('')
-     }
+    const submithandler = (e) => {
+        e.preventDefault();
+    }
     return (
         <>
             <h2
                 onClick={() => {
-                    props.setconfirm(false)
-                }} className='text-center w-[93%] top-0  absolute'><i className="text-gray-300 text-2xl ri-arrow-down-wide-fill"></i></h2>
-            <h3 className='font-semibold mt-15 text-2xl '>Confirm this ride to start!</h3>
+                    props.setupper(false)
+                }} className='text-center w-[93%] top-0  absolute'><i className="text-gray-400 text-2xl ri-arrow-down-wide-fill"></i></h2>
+            <h3 className='font-semibold mt-15 text-2xl '>Finish this Ride</h3>
 
             <div className='flex items-center justify-between rounded-xl bg-yellow-300 px-2 mt-5'>
                 <div className='p-2 flex items-center gap-2 justify-start '>
@@ -53,22 +51,11 @@ const ConRidePopUp = (props) => {
                 </div>
 
                 <div className='mt-6 w-full'>
-                    <form onSubmit={submithandler} >
-                        <input type="Number" className='bg-[#dedede] w-full px-5 text-lg  py-3 font-mono rounded outline-none' placeholder='Enter OTP' value={otp} onChange={(e)=>{
-                              setotp(e.target.value)
-                        }}/>
-                        <Link to="/captain-riding" className='w-full mt-5 bg-green-600 inline-block text-center font-bold text-lg text-white p-2  rounded-lg '>Confirm</Link>
-
-                        <button onClick={() => {
-                            props.setconfirm(false)
-                            props.setride(false)
-                        }} className='w-full mt-1 bg-red-600 text-center font-bold text-lg text-white p-2 rounded-lg '>Cancel</button>
-
-                    </form>
+                      <Link to="/captain-home" className='w-full mt-3 bg-green-600 inline-block text-center font-bold text-lg text-white p-2  rounded-lg '>Confirm</Link>
                 </div>
             </div>
         </>
     )
 }
 
-export default ConRidePopUp
+export default FinishRidePop

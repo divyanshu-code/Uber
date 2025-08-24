@@ -152,7 +152,6 @@ const Home = () => {
         <div className='flex flex-col justify-end absolute w-full h-screen top-0'>
 
           <div className='h-[30%] p-6 bg-white relative'>
-
             <h1 onClick={() => {
               setpanel(false);
 
