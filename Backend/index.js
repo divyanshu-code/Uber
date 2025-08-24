@@ -4,10 +4,11 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const connectDB = require('./db/db')
+const cookie = require('cookie-parser')
 const userRoutes = require('./Route/user')
 const captainRoutes = require('./Route/captain')
-const cookie = require('cookie-parser')
 const mapRoutes = require('./Route/map.route')
+const rideRoutes = require('./Route/ride')
 
 connectDB()                                         // connect to the database
 
@@ -23,6 +24,7 @@ app.get('/', (req, res) => {
 app.use('/users', userRoutes)
 app.use('/captains', captainRoutes)
 app.use('/maps' , mapRoutes)
+app.use('/rides' , rideRoutes)
 
 module.exports = app;
 
