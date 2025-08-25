@@ -108,7 +108,7 @@ module.exports.getLocationSuggestions = async (input) => {
     try {
         const response = await axios.get(url, {
             headers: {
-                "User-Agent": "YourAppName/1.0 (your.email@example.com)"
+                "User-Agent": "UberCloneApp (divyanshubisht5734@gmail.com)"
             }
         });
 

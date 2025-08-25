@@ -16,7 +16,7 @@ router.get('/get-distance-time',
       , authmiddleware.authenticateUser, getdistance)
 
 router.get('/get-suggestion',
-      query('input').isString().isLength({ min: 3 }),
+      query('input').isString().isLength({ min: 1 }),
       authmiddleware.authenticateUser, getsuggestion)
 
 
