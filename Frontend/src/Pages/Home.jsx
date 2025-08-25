@@ -9,18 +9,20 @@ import VehiclePanel from '../Components/VehiclePanel'
 import ConfirmRidePanel from '../Components/ConfirmRidePanel'
 import LookingForDriver from '../Components/LookingForDriver'
 import WaitingForDriver from '../Components/WaitingForDriver'
+import axios from 'axios';
 
 const Home = () => {
 
-
-  const [pick, setpick] = useState('')
+  const [pick, setpick] = useState('');
   const [destination, setDestination] = useState('');
-  const [panel, setpanel] = useState(false)
-  const [vehiclePanel, setvehiclePanel] = useState(false)
-  const [confirmRidePanel, setconfirmRidePanel] = useState(false)
-  const [driver, setdriver] = useState(false)
-  const [waitingfordriver, setwaitingfordriver] = useState(false)
+  const [panel, setpanel] = useState(false);
+  const [vehiclePanel, setvehiclePanel] = useState(false);
+  const [confirmRidePanel, setconfirmRidePanel] = useState(false);
+  const [driver, setdriver] = useState(false);
+  const [waitingfordriver, setwaitingfordriver] = useState(false);
 
+  const [suggestions, setSuggestions] = useState([]);
+  const [activeField, setActiveField] = useState('');
 
   const Panelref = useRef(null);                         // Reference for the panel element
   const Closeref = useRef(null)                         // Reference for the close icon element
@@ -28,6 +30,37 @@ const Home = () => {
   const confirmRidePanelref = useRef(null)
   const driverref = useRef(null)
   const waitingfordriverref = useRef(null)
+
+  const fetchSuggestions = async (text) => {
+    if (!text) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestion`,
+        {
+          params: { input: text },
+          headers:
+            { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+
+      setSuggestions(response.data || []);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error.message);
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionSelect = (suggestion) => {
+    if (activeField === 'pickup') {
+      setpick(suggestion);
+    } else if (activeField === 'destination') {
+      setDestination(suggestion);
+    }
+    // setpanel(false);
+    setSuggestions([]);
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -123,7 +156,7 @@ const Home = () => {
 
   useGSAP(() => {
 
-    if (driver) {
+    if (waitingfordriver) {
 
       gsap.to(waitingfordriverref.current, {
         transform: 'translateY(0%)',
@@ -151,7 +184,7 @@ const Home = () => {
 
         <div className='flex flex-col justify-end absolute w-full h-screen top-0'>
 
-          <div className='h-[30%] p-6 bg-white relative'>
+          <div className='h-[35%] p-6 bg-white relative'>
             <h1 onClick={() => {
               setpanel(false);
 
@@ -162,30 +195,53 @@ const Home = () => {
             <h4 className='text-2xl font-semibold'>Find a trip</h4>
 
             <form onSubmit={handleSearch}>
-              <div className="line border-l-4 top-[45%] left-10 bg-gray-900 rounded-full h-16 absolute "></div>
-              <input className='bg-[#dedede] w-full px-12 text-base mt-5 py-2 rounded outline-none' type="text" placeholder='Add a pick-up location' value={pick}
-                onChange={
-                  (e) => setpick(e.target.value)
-                }
-
-                onClick={() =>
-                  setpanel(true)}
-              />
-              <input className='bg-[#dedede] w-full px-12 text-base mt-3 py-2 rounded outline-none' type="text" placeholder='Enter your destination' value={destination}
+              <div className="line border-l-4 top-[40%] left-10 bg-gray-900 rounded-full h-16 absolute "></div>
+              <input
+                className='bg-[#dedede] w-full px-12 text-base mt-5 py-2 rounded outline-none'
+                type="text"
+                placeholder='Add a pick-up location'
+                value={pick}
                 onChange={(e) => {
-                  setDestination(e.target.value)
-                }} />
+                  setpick(e.target.value);
+                  fetchSuggestions(e.target.value);
+                }}
+                onFocus={() => {
+                  setActiveField('pickup');
+                  setpanel(true);
+                }}
+              />
+              <input
+                className='bg-[#dedede] w-full px-12 text-base mt-3 py-2 rounded outline-none'
+                type="text"
+                placeholder='Enter your destination'
+                value={destination}
+                onChange={(e) => {
+                  setDestination(e.target.value);
+                  fetchSuggestions(e.target.value);
+                }}
+                onFocus={() => {
+                  setActiveField('destination');
+                  setpanel(true);
+                }}
+              />
             </form>
-
+            <button onClick={()=>{
+               setpanel(false);
+               setvehiclePanel(true);
+            }} className='bg-black text-white py-2 px-4 rounded bottom-0 mt-3 w-full'>Find Trip</button>
           </div>
 
-          <div ref={Panelref}
-            className='bg-white '>
-            <LocationSearchPanel setpanel={setpanel} setvehiclePanel={setvehiclePanel} />
+          <div ref={Panelref} className='bg-white '>
+            <LocationSearchPanel
+              suggestions={suggestions}
+              onSelectSuggestion={handleSuggestionSelect}
+              setpanel={setpanel}
+              setvehiclePanel={setvehiclePanel}
+            />
           </div>
         </div>
 
-        <div ref={vehiclePanelref} className='fixed bottom-0 bg-white w-full h-[30%]'>
+        <div ref={vehiclePanelref} className='fixed bottom-0 bg-white w-full h-[35%]'>
           <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setvehiclePanel={setvehiclePanel} />
         </div>
 
