@@ -26,7 +26,7 @@ const CaptainProtectedWrapper = ({children}) => {
           }
         }).then((response) => {
           if (response.status >= 200 && response.status < 300) {
-              setcaptain(response.data.captain);
+              setcaptain(response.data);
             setisloading(false);
           }
         }).catch((error) => {

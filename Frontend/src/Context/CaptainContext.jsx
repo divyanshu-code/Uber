@@ -7,6 +7,10 @@ const CaptainContext = ({children}) => {
   const [isloading, setisloading] = useState(false)
   const [error, seterror] = useState(null)
 
+   const updateCaptain = (captainData) => {
+        setcaptain(captainData);
+    };
+
   const value = {
 
     captain,
@@ -14,9 +18,10 @@ const CaptainContext = ({children}) => {
     isloading,
     setisloading,
     error,
-    seterror
-
+    seterror,
+    updateCaptain
   }
+  
 
   return (
     <>

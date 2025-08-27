@@ -9,7 +9,7 @@ import ConRidePopUp from '../Components/ConRidePopUp'
 
 const Captain_Home = () => {
 
-  const [ride, setride] = useState(true)
+  const [ride, setride] = useState(false)
   const [confirm, setconfirm] = useState(false)
 
   const rideref = useRef(null)

@@ -23,6 +23,8 @@ const Home = () => {
 
   const [suggestions, setSuggestions] = useState([]);
   const [activeField, setActiveField] = useState('');
+  const [fare, setfare] = useState({})
+  const [vehicleType, setvehicleType] = useState(null)
 
   const Panelref = useRef(null);                         // Reference for the panel element
   const Closeref = useRef(null)                         // Reference for the close icon element
@@ -173,6 +175,39 @@ const Home = () => {
 
   }, [waitingfordriver]);
 
+  async function Trip() {
+
+    setpanel(false);
+    setvehiclePanel(true);
+
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+      params: { 
+        pickup: pick,          
+        destination: destination
+       },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+      setfare(response.data);
+  }
+
+  
+    async function createRide() {
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+            pickup: pick,
+            destination,
+            vehicleType
+        }, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+
+        console.log(response.data);
+    }
+
   return (
     <>
       <div className='relative overflow-hidden'>
@@ -184,7 +219,7 @@ const Home = () => {
 
         <div className='flex flex-col justify-end absolute w-full h-screen top-0'>
 
-          <div className='h-[35%] p-6 bg-white relative'>
+          <div className='top-0 h-[35%] p-6 bg-white relative'>
             <h1 onClick={() => {
               setpanel(false);
 
@@ -225,10 +260,7 @@ const Home = () => {
                 }}
               />
             </form>
-            <button onClick={()=>{
-               setpanel(false);
-               setvehiclePanel(true);
-            }} className='bg-black text-white py-2 px-4 rounded bottom-0 mt-3 w-full'>Find Trip</button>
+            <button onClick={Trip} className='bg-black text-white py-2 px-4 rounded bottom-0 mt-3 w-full'>Find Trip</button>
           </div>
 
           <div ref={Panelref} className='bg-white '>
@@ -241,15 +273,15 @@ const Home = () => {
           </div>
         </div>
 
-        <div ref={vehiclePanelref} className='fixed bottom-0 bg-white w-full h-[35%]'>
-          <VehiclePanel setconfirmRidePanel={setconfirmRidePanel} setvehiclePanel={setvehiclePanel} />
+        <div ref={vehiclePanelref} className='fixed bottom-0 z-10 bg-white w-full translate-y-full h-[70%]'>
+          <VehiclePanel fare={fare} selectVehicle={setvehicleType} setconfirmRidePanel={setconfirmRidePanel} setvehiclePanel={setvehiclePanel} />
         </div>
 
         <div ref={confirmRidePanelref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
-          <ConfirmRidePanel setdriver={setdriver} setconfirmRidePanel={setconfirmRidePanel} />
+          <ConfirmRidePanel  createRide={createRide} pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} setconfirmRidePanel={setconfirmRidePanel} />
         </div>
         <div ref={driverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
-          <LookingForDriver setdriver={setdriver} />
+          <LookingForDriver pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} />
         </div>
         <div ref={waitingfordriverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
           <WaitingForDriver setwaitingfordriver={setwaitingfordriver} />
