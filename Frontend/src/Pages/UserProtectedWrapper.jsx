@@ -25,7 +25,7 @@ const UserProtectedWrapper = ({children}) => {
           }).then((response) => {
     
             if (response.status >= 200 && response.status < 300) {
-              setuser(response.data.user);
+              setuser(response.data);
               setisloading(false);
             }
           }).catch((error) => {

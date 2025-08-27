@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import { useRef } from 'react'
@@ -10,6 +10,8 @@ import ConfirmRidePanel from '../Components/ConfirmRidePanel'
 import LookingForDriver from '../Components/LookingForDriver'
 import WaitingForDriver from '../Components/WaitingForDriver'
 import axios from 'axios';
+import { UserDataContext } from '../Context/UserContext'
+import { Socket } from '../Context/SocketContext'
 
 const Home = () => {
 
@@ -32,6 +34,15 @@ const Home = () => {
   const confirmRidePanelref = useRef(null)
   const driverref = useRef(null)
   const waitingfordriverref = useRef(null)
+
+  const { socket } = useContext(Socket);
+  const { user } = useContext(UserDataContext);
+
+  useEffect(() => {
+
+    socket.emit('join', { userType: 'user', userId: user._id });
+
+  }, [user]);
 
   const fetchSuggestions = async (text) => {
     if (!text) {
@@ -181,32 +192,32 @@ const Home = () => {
     setvehiclePanel(true);
 
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-      params: { 
-        pickup: pick,          
+      params: {
+        pickup: pick,
         destination: destination
-       },
+      },
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     });
 
-      setfare(response.data);
+    setfare(response.data);
   }
 
-  
-    async function createRide() {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
-            pickup: pick,
-            destination,
-            vehicleType
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
 
-        console.log(response.data);
-    }
+  async function createRide() {
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+      pickup: pick,
+      destination,
+      vehicleType
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    console.log(response.data);
+  }
 
   return (
     <>
@@ -278,7 +289,7 @@ const Home = () => {
         </div>
 
         <div ref={confirmRidePanelref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
-          <ConfirmRidePanel  createRide={createRide} pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} setconfirmRidePanel={setconfirmRidePanel} />
+          <ConfirmRidePanel createRide={createRide} pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} setconfirmRidePanel={setconfirmRidePanel} />
         </div>
         <div ref={driverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
           <LookingForDriver pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} />
