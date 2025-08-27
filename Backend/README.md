@@ -539,3 +539,222 @@ No request body required. Token must be provided.
     "message": "Unauthorizied access"
   }
   ```
+
+---
+
+### Map Endpoints
+
+#### Get Coordinates
+`GET /maps/get-coordinate`
+
+**Description:** Returns the geographic coordinates (latitude and longitude) for a given address using the Google Maps API.
+
+**Query Parameters:**
+- `address` (string): The address to be geocoded. Must be at least 3 characters long.
+
+**Responses:**
+
+- **Success**
+  - **Status Code:** `200 OK`
+  - **Body:**
+    ```json
+    {
+      "lat": <latitude>,
+      "lng": <longitude>
+    }
+    ```
+
+- **Validation Error**
+  - **Status Code:** `400 Bad Request`
+  - **Body:**
+    ```json
+    {
+      "errors": [
+        { "msg": "Error message", "param": "address", "location": "query" }
+      ]
+    }
+    ```
+
+- **Not Found/Error**
+  - **Status Code:** `404 Not Found`
+  - **Body:**
+    ```json
+    { "message": "Coordinates not found" }
+    ```
+
+---
+
+#### Get Distance & Time
+`GET /maps/get-distance-time`
+
+**Description:** Returns the travel distance and estimated time between two locations.
+
+**Query Parameters:**
+- `origin` (string): The starting location. Must be at least 3 characters long.
+- `destination` (string): The destination location. Must be at least 3 characters long.
+
+**Responses:**
+
+- **Success**
+  - **Status Code:** `200 OK`
+  - **Body:** Example response:
+    ```json
+    {
+      "distance": "10 km",
+      "duration": "15 mins"
+    }
+    ```
+
+- **Validation Error**
+  - **Status Code:** `400 Bad Request`
+  - **Body:**
+    ```json
+    { "errors": [ { "msg": "Error message", "param": "origin/destination", "location": "query" } ] }
+    ```
+
+- **Server Error**
+  - **Status Code:** `500 Internal Server Error`
+  - **Body:**
+    ```json
+    { "message": "Internal server error" }
+    ```
+
+---
+
+#### Get Suggestions
+`GET /maps/get-suggestion`
+
+**Description:** Returns location suggestions based on a partial input.
+
+**Query Parameters:**
+- `input` (string): The text input to search for suggestions. Must be at least 1 character long.
+
+**Responses:**
+
+- **Success**
+  - **Status Code:** `200 OK`
+  - **Body:** Example response:
+    ```json
+    {
+      "suggestions": [
+        "Location 1",
+        "Location 2",
+        "Location 3"
+      ]
+    }
+    ```
+
+- **Validation Error**
+  - **Status Code:** `400 Bad Request`
+  - **Body:**
+    ```json
+    { "errors": [ { "msg": "Error message", "param": "input", "location": "query" } ] }
+    ```
+
+- **Server Error**
+  - **Status Code:** `500 Internal Server Error`
+  - **Body:**
+    ```json
+    { "message": "Internal server error" }
+    ```
+
+---
+
+### Ride Endpoints
+
+#### Create Ride
+`POST /rides/create`
+
+**Description:** Creates a new ride for the authenticated user.
+
+**Authentication:** Requires a valid JWT token (sent via Authorization header or cookie).
+
+**Request Body:**
+```
+{
+  "pickup": "string (min 3 chars)",
+  "destination": "string (min 3 chars)",
+  "vehicleType": "string (car, motorcycle, auto)"
+}
+```
+
+**Example:**
+```
+{
+  "pickup": "Sector 18, Noida",
+  "destination": "Connaught Place, Delhi",
+  "vehicleType": "car"
+}
+```
+
+**Validation:**
+- `pickup`: Must be a string, minimum 3 characters.
+- `destination`: Must be a string, minimum 3 characters.
+- `vehicleType`: Must be one of `car`, `motorcycle`, or `auto`.
+
+**Responses:**
+- **Success**
+  - **Status Code:** `200 OK`
+  - **Body:**
+    ```json
+    {
+      "_id": "<ride id>",
+      "user": "<user id>",
+      "pickup": "Sector 18, Noida",
+      "destination": "Connaught Place, Delhi",
+      "vehicleType": "car"
+      // other ride fields
+    }
+    ```
+- **Validation Error**
+  - **Status Code:** `400 Bad Request`
+  - **Body:**
+    ```json
+    {
+      "errors": [ { "msg": "Error message", "param": "field name", "location": "body" } ]
+    }
+    ```
+- **Server Error**
+  - **Status Code:** `500 Internal Server Error`
+  - **Body:**
+    ```json
+    { "message": "Internal server error" }
+    ```
+
+---
+
+#### Get Fare
+`GET /rides/get-fare`
+
+**Description:** Returns the estimated fare for a ride between two locations for the authenticated user.
+
+**Authentication:** Requires a valid JWT token (sent via Authorization header or cookie).
+
+**Query Parameters:**
+- `pickup` (string): The pickup location. Must be at least 3 characters long.
+- `destination` (string): The destination location. Must be at least 3 characters long.
+
+**Responses:**
+- **Success**
+  - **Status Code:** `200 OK`
+  - **Body:**
+    ```json
+    {
+      "fare": 250,
+      "currency": "INR"
+    }
+    ```
+- **Validation Error**
+  - **Status Code:** `400 Bad Request`
+  - **Body:**
+    ```json
+    {
+      "errors": [ { "msg": "Error message", "param": "pickup/destination", "location": "query" } ]
+    }
+    ```
+- **Server Error**
+  - **Status Code:** `500 Internal Server Error`
+  - **Body:**
+    ```json
+    { "message": "Internal server error" }
+    ```

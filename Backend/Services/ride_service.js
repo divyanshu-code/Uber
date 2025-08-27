@@ -65,6 +65,8 @@ async function getfare(pickup, destination) {
         
 }
 
+module.exports.getfare = getfare
+
 function getotp(num) {
     return crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString();
 }

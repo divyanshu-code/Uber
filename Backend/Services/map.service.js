@@ -61,8 +61,6 @@ module.exports.getDistanceAndTime = async (origin, destination) => {
     // Use OSRM public API for routing
     const url = `https://router.project-osrm.org/route/v1/driving/${originCoords.lng},${originCoords.lat};${destinationCoords.lng},${destinationCoords.lat}?overview=false`;
 
-    console.log(url);
-
     try {
         const response = await axios.get(url);
         if (
