@@ -22,9 +22,25 @@ function intializeSocket(server) {
 
             if (userType === 'user') {
                 await usermodel.findByIdAndUpdate(userId, { socketId: socket.id })
-            }else if(userType === 'captain'){
+            } else if (userType === 'captain') {
                 await captainmodel.findByIdAndUpdate(userId, { socketId: socket.id })
             }
+        })
+
+        socket.on('update-location-captain', async (data) => {
+
+            const { userId, location } = data;
+
+            if (!location || !location.lat || !location.lng) {
+                return socket.emit('error', { message: "Invalid Location" })
+            }
+
+            await captainmodel.findByIdAndUpdate(userId, {
+                location: {
+                    type: "Point",
+                    coordinates: [location.lng, location.lat]   // GeoJSON order
+                }
+            })
         })
 
         socket.on('disconnect', () => {
@@ -35,10 +51,11 @@ function intializeSocket(server) {
     })
 }
 
-function sendMessageToSocketId(socketId, message) {
+function sendMessageToSocketId(socketId, messageObject) {
+
     if (io) {
 
-        io.to(socketId).emit('message', message);
+        io.to(socketId).emit(messageObject.event, messageObject.data);
     } else {
         console.log('Socket.io is not initialized');
 

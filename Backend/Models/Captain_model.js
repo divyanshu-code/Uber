@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');                  
+const bcrypt = require('bcrypt');
 
 const captainSchema = new mongoose.Schema({
 
@@ -72,17 +72,17 @@ const captainSchema = new mongoose.Schema({
     },
 
     location: {
-
-        lat: {
-            type: Number,
-
+        type: {
+            type: String,
+            enum: ["Point"],
+            default: "Point"
         },
-
-        lng: {
-            type: Number,
-
+        coordinates: {
+            type: [Number], // [lng, lat]
+            index: "2dsphere"
         }
     }
+
 });
 
 
@@ -95,7 +95,7 @@ captainSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 }
 
-captainSchema.statics.hashPassword = async function (password) {    
+captainSchema.statics.hashPassword = async function (password) {
     const salt = await bcrypt.genSalt(10);
     return await bcrypt.hash(password, salt);
 }
