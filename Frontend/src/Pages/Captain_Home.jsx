@@ -25,7 +25,39 @@ const Captain_Home = () => {
 
     socket.emit('join', { userType: 'captain', userId: captain._id });
 
+
+    //  this updates the captain's location and show its live position 
+
+    const updatelocation = () => {
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+
+          socket.emit('update-location-captain', {
+            userId: captain._id,
+            location: {
+              ltd: position.coords.latitude,
+              lng: position.coords.longitude
+            }
+           });
+        });
+      }
+    };
+
+    const locationInterval = setInterval(updatelocation, 10000);
+
+     updatelocation();
+    // return () => {
+    //   clearInterval(locationInterval);
+    // };
+
   }, [captain]);
+
+  socket.on('new-ride', (message) => {
+
+    console.log(message);
+    
+  });
 
   useGSAP(() => {
 
