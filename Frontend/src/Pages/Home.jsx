@@ -44,6 +44,13 @@ const Home = () => {
 
   }, [user]);
 
+  socket.on('ride-confirmed', (ride) => {
+
+     setdriver(false)
+     setwaitingfordriver(true)
+    
+  });
+
   const fetchSuggestions = async (text) => {
     if (!text) {
       setSuggestions([]);
@@ -216,7 +223,6 @@ const Home = () => {
       }
     })
 
-    console.log(response.data);
   }
 
   return (

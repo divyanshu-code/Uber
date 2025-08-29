@@ -9,11 +9,13 @@ import ConRidePopUp from '../Components/ConRidePopUp'
 import { useContext } from 'react'
 import { Socket } from '../Context/SocketContext'
 import { CaptainDataContext } from '../Context/CaptainContext'
+import axios from 'axios'
 
 const Captain_Home = () => {
 
   const [ride, setride] = useState(false)
   const [confirm, setconfirm] = useState(false)
+  const [userride, setuserride] = useState(null)
 
   const rideref = useRef(null)
   const confirmref = useRef(null)
@@ -24,7 +26,6 @@ const Captain_Home = () => {
   useEffect(() => {
 
     socket.emit('join', { userType: 'captain', userId: captain._id });
-
 
     //  this updates the captain's location and show its live position 
 
@@ -53,9 +54,10 @@ const Captain_Home = () => {
 
   }, [captain]);
 
-  socket.on('new-ride', (message) => {
+  socket.on('new-ride', (ride) => {
 
-    console.log(message);
+    setuserride(ride)
+    setride(true)
     
   });
 
@@ -97,6 +99,21 @@ const Captain_Home = () => {
 
   }, [confirm]);
 
+  async function confirmride() {
+
+           const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+             rideId: userride._id,
+             captainId: captain._id
+           }, {
+             headers: {
+               Authorization: `Bearer ${localStorage.getItem('token')}`
+             }
+           });
+
+           setride(false);
+           setconfirm(true);
+  }
+
   return (
     <>
       <div className='h-screen'>
@@ -114,8 +131,8 @@ const Captain_Home = () => {
           <CaptainDetails />
         </div>
 
-        <div ref={rideref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
-          <RidePopUp setride={setride} setconfirm={setconfirm} />
+        <div ref={rideref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[75%] px-3'>
+          <RidePopUp userride={userride} setride={setride} setconfirm={setconfirm} confirmride={confirmride} />
         </div>
 
         <div ref={confirmref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-screen px-3'>
