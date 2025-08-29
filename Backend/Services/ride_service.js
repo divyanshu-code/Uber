@@ -1,3 +1,4 @@
+const { error } = require('console');
 const ridemodel = require('../Models/ride_model')
 const mapservice = require('../Services/map.service')
 const crypto = require('crypto');
@@ -62,7 +63,7 @@ async function getfare(pickup, destination) {
     };
 
     return fares
-        
+
 }
 
 module.exports.getfare = getfare
@@ -71,23 +72,39 @@ function getotp(num) {
     return crypto.randomInt(Math.pow(10, num - 1), Math.pow(10, num)).toString();
 }
 
-module.exports.createride= async ({ user , vehicleType , pickup, destination , }) => {
+module.exports.createride = async ({ user, vehicleType, pickup, destination, }) => {
 
-       if (!user || !pickup || !destination || !vehicleType) {
-            throw new Error('All fields are required');
-       }
-
-        const fare = await getfare(pickup , destination)
-        
-       const ride = await ridemodel.create({
-             user,
-             pickup,
-             destination,
-             otp : getotp(6),
-             fare : fare [vehicleType]
-       })
-
-       return ride;
-
+    if (!user || !pickup || !destination || !vehicleType) {
+        throw new Error('All fields are required');
     }
 
+    const fare = await getfare(pickup, destination)
+
+    const ride = await ridemodel.create({
+        user,
+        pickup,
+        destination,
+        otp: getotp(6),
+        fare: fare[vehicleType]
+    })
+
+    return ride;
+
+}
+
+module.exports.getconfirm = async ({ rideId , captain }) => {
+
+    if (!rideId) {
+        throw new Error('RideId is required')
+    }
+
+    await ridemodel.findOneAndUpdate({ _id: rideId }, { status: 'accepted', captain: captain._id })
+
+    const ride = await ridemodel.findOne({ _id: rideId }).populate('user').populate('captain'); 
+
+    if (!ride) {
+        throw new Error('Ride not found')
+    }
+
+    return ride;
+}

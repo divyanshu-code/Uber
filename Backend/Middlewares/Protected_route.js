@@ -32,13 +32,11 @@ module.exports.authenticateUser = async (req, res, next) => {
 module.exports.authenticateCaptain = async (req, res, next) => {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
 
-
     if (!token) {
         return res.status(401).json({ message: 'Unauthorizied access' });
     }
 
     const blacklistedToken = await BlacklistToken.findOne({ token: token });
-
 
     if (blacklistedToken) {
         return res.status(401).json({ message: 'Unauthorizied' });
