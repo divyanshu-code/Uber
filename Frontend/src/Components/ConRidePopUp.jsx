@@ -12,21 +12,21 @@ const ConRidePopUp = (props) => {
         e.preventDefault();
         setotp('')
 
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
-         params: {
-            rideId: props.userride._id,
-            otp: otp
-         },
-         headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-         }
-      });
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+            params: {
+                rideId: props.userride._id,
+                otp: otp
+            },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
 
-      if(response.status >= 200 && response.status < 300){
-          props.setconfirm(false)
-          props.setride(false)
-          navigate('/captain-riding');
-      }
+        if (response.status >= 200 && response.status < 300) {
+            props.setconfirm(false)
+            props.setride(false)
+            navigate('/captain-riding', { state: { ride: props.userride } });
+        }
     }
 
     return (

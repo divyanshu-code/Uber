@@ -59,7 +59,7 @@ const Home = () => {
   socket.on('ride-started' , (ride)=>{
     
     setwaitingfordriver(false);
-    navigate('/riding');
+    navigate('/riding' , { state : { ride : ride } });
 
   })
 

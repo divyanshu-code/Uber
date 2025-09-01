@@ -1,12 +1,14 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import React, { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import FinishRidePop from '../Components/FinishRidePop'
 
 const CaptainRiding = () => {
 
     const [upper, setupper] = useState(false)
+    const location = useLocation();
+    const ridedata = location.state?.ride;
 
     const upperref = useRef(null)
 
@@ -49,7 +51,7 @@ const CaptainRiding = () => {
                 <button className='  bg-green-600  font-bold text-medium text-white px-8 py-2 rounded-lg '>Complete ride</button>
         </div>
          <div  ref={upperref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[80%] px-3'>
-               <FinishRidePop setupper={setupper}/>
+               <FinishRidePop  setupper={setupper} ridedata={ridedata}/>
         </div>
       </div>
     </>
