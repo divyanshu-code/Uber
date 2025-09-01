@@ -1,14 +1,34 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const ConRidePopUp = (props) => {
 
-     const [otp, setotp] = useState('')
+    const [otp, setotp] = useState('')
+    const navigate = useNavigate();
 
-     const submithandler = (e)=>{
-            e.preventDefault();
-            setotp('')
-     }
+    const submithandler = async (e) => {
+        e.preventDefault();
+        setotp('')
+
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+         params: {
+            rideId: props.userride._id,
+            otp: otp
+         },
+         headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+         }
+      });
+
+      if(response.status >= 200 && response.status < 300){
+          props.setconfirm(false)
+          props.setride(false)
+          navigate('/captain-riding');
+      }
+    }
+
     return (
         <>
             <h2
@@ -20,7 +40,7 @@ const ConRidePopUp = (props) => {
             <div className='flex items-center justify-between rounded-xl bg-yellow-300 px-2 mt-5'>
                 <div className='p-2 flex items-center gap-2 justify-start '>
                     <img className='h-10 w-10 rounded-full object-cover ' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxglj3iwmlB9Y9oZBH3qicAgZcnj6dtdHN2Q&s" alt="error" />
-                    <h3 className='text-lg font-medium'>Ashika rawat</h3>
+                    <h3 className='text-lg font-medium'>{props.userride?.user.fullname.firstname + " "}{props.userride?.user.fullname.lastname}</h3>
                 </div>
                 <h5 className='font-semibold text-lg'>3.5 KM</h5>
             </div>
@@ -32,20 +52,20 @@ const ConRidePopUp = (props) => {
                         <i className="ri-map-pin-range-fill"></i>
                         <div>
                             <h3>Street No. 01</h3>
-                            <p className='text-gray-600 text-sm'>Kapashera , south west delhi </p>
+                            <p className='text-gray-600 text-sm'>{props.userride?.pickup} </p>
                         </div>
                     </div>
                     <div className='flex items-center gap-3 leading-tight border-b-2 border-gray-300 font-medium mt-3 p-2'>
                         <i className="ri-map-pin-user-fill"></i>
                         <div>
                             <h3>Street No. 01</h3>
-                            <p className='text-gray-600 text-sm'>Kapashera , south west delhi </p>
+                            <p className='text-gray-600 text-sm'>{props.userride?.destination} </p>
                         </div>
                     </div>
                     <div className='flex items-center gap-3 leading-tight  font-medium mt-3 p-2'>
                         <i className="ri-cash-line"></i>
                         <div >
-                            <h3>₹193.20</h3>
+                            <h3>₹{props.userride?.fare}</h3>
                             <p className='text-gray-600 text-sm'>Cash Cash</p>
                         </div>
                     </div>
@@ -54,10 +74,10 @@ const ConRidePopUp = (props) => {
 
                 <div className='mt-6 w-full'>
                     <form onSubmit={submithandler} >
-                        <input type="Number" className='bg-[#dedede] w-full px-5 text-lg  py-3 font-mono rounded outline-none' placeholder='Enter OTP' value={otp} onChange={(e)=>{
-                              setotp(e.target.value)
-                        }}/>
-                        <Link to="/captain-riding" className='w-full mt-5 bg-green-600 inline-block text-center font-bold text-lg text-white p-2  rounded-lg '>Confirm</Link>
+                        <input type="Number" className='bg-[#dedede] w-full px-5 text-lg  py-3 font-mono rounded outline-none' placeholder='Enter OTP' value={otp} onChange={(e) => {
+                            setotp(e.target.value)
+                        }} />
+                        <button className='w-full mt-5 bg-green-600 inline-block text-center font-bold text-lg text-white p-2  rounded-lg '>Confirm</button>
 
                         <button onClick={() => {
                             props.setconfirm(false)

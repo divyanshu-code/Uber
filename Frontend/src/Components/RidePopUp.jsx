@@ -46,13 +46,15 @@ const RidePopUp = (props) => {
 
                 <div className=' flex-col items-center justify-between  w-full '>
                     <button onClick={() => {
+
+                        props.setconfirm(true);
                         props.confirmride();
                        
-                    }} className=' w-full bg-green-600 text-center font-bold text-lg  text-white px-8 p-1 rounded-lg '>Accept</button>
+                    }} className=' w-full bg-green-600 text-center font-bold text-lg  text-white px-8 py-2 rounded-lg '>Accept</button>
 
                     <button onClick={() => {
                         props.setride(false)
-                    }} className=' w-full  bg-red-600 text-center mt-2 font-bold text-lg text-white px-8 p-1 rounded-lg '>Ignore</button>
+                    }} className=' w-full  bg-red-600 text-center mt-2 font-bold text-lg text-white px-8 py-2 rounded-lg '>Ignore</button>
 
                 </div>
             </div>

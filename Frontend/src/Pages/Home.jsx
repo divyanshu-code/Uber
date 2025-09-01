@@ -12,6 +12,7 @@ import WaitingForDriver from '../Components/WaitingForDriver'
 import axios from 'axios';
 import { UserDataContext } from '../Context/UserContext'
 import { Socket } from '../Context/SocketContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
 
@@ -23,10 +24,13 @@ const Home = () => {
   const [driver, setdriver] = useState(false);
   const [waitingfordriver, setwaitingfordriver] = useState(false);
 
+  const navigate = useNavigate();
+
   const [suggestions, setSuggestions] = useState([]);
   const [activeField, setActiveField] = useState('');
   const [fare, setfare] = useState({})
   const [vehicleType, setvehicleType] = useState(null)
+  const [ridedetail, setridedetail] = useState(null)
 
   const Panelref = useRef(null);                         // Reference for the panel element
   const Closeref = useRef(null)                         // Reference for the close icon element
@@ -46,10 +50,18 @@ const Home = () => {
 
   socket.on('ride-confirmed', (ride) => {
 
-     setdriver(false)
-     setwaitingfordriver(true)
-    
+    setridedetail(ride);
+    setdriver(false);
+    setwaitingfordriver(true);
+
   });
+
+  socket.on('ride-started' , (ride)=>{
+    
+    setwaitingfordriver(false);
+    navigate('/riding');
+
+  })
 
   const fetchSuggestions = async (text) => {
     if (!text) {
@@ -222,7 +234,6 @@ const Home = () => {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
-
   }
 
   return (
@@ -294,14 +305,14 @@ const Home = () => {
           <VehiclePanel fare={fare} selectVehicle={setvehicleType} setconfirmRidePanel={setconfirmRidePanel} setvehiclePanel={setvehiclePanel} />
         </div>
 
-        <div ref={confirmRidePanelref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
+        <div ref={confirmRidePanelref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[75%] px-3'>
           <ConfirmRidePanel createRide={createRide} pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} setconfirmRidePanel={setconfirmRidePanel} />
         </div>
-        <div ref={driverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
+        <div ref={driverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[75%] px-3'>
           <LookingForDriver pickup={pick} destination={destination} fare={fare} vehicleType={vehicleType} setdriver={setdriver} />
         </div>
-        <div ref={waitingfordriverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[70%] px-3'>
-          <WaitingForDriver setwaitingfordriver={setwaitingfordriver} />
+        <div ref={waitingfordriverref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[75%] px-3'>
+          <WaitingForDriver ridedetail={ridedetail} setwaitingfordriver={setwaitingfordriver} />
         </div>
       </div>
     </>

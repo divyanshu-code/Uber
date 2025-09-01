@@ -41,7 +41,7 @@ const ConfirmRidePanel = (props) => {
                          <button onClick={()=>{
                             props.setdriver(true)
                             props.createRide()
-                         }} className='w-full mt-3 bg-green-600 text-center font-bold text-lg text-white p-2 rounded-lg '>Confirm</button>
+                         }} className='w-full mt-1 bg-green-600 text-center font-bold text-lg text-white p-2 rounded-lg '>Confirm</button>
                     </div>
             </div>
         </>

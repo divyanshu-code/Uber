@@ -13,9 +13,10 @@ const WaitingForDriver = (props) => {
                 <div className='flex items-center justify-between mt-7 '>
                     <img className='h-16' src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png" alt="error" />
                     <div className='text-right'>
-                        <h2 className='text-lg font-medium'>Divyanshu</h2>
-                        <h4 className='text-xl font-semibold -mt-1 -mb-1'>MP04 AB 1234</h4>
+                        <h2 className='text-lg font-medium capitalize'>{props.ridedetail?.captain.fullname.firstname + " "}</h2>
+                        <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ridedetail?.captain.vehicle.plate}</h4>
                         <p className='text-gray-600 text-sm'>Maruti Sazuki Alto</p>
+                        <h5 className=' text-md font-bold leading-5'>{props.ridedetail?.otp}</h5>
                     </div>
                 </div>
 
@@ -25,20 +26,20 @@ const WaitingForDriver = (props) => {
                             <i className="ri-map-pin-range-fill"></i>
                             <div>
                                 <h3>Street No. 01</h3>
-                                <p className='text-gray-600 text-sm'>Kapashera , south west delhi </p>
+                                <p className='text-gray-600 text-sm'>{props.ridedetail?.pickup} </p>
                             </div>
                         </div>
                         <div className='flex items-center gap-3 leading-tight border-b-2 border-gray-300 font-medium mt-3 p-2'>
                             <i className="ri-map-pin-user-fill"></i>
                             <div>
                                 <h3>Street No. 01</h3>
-                                <p className='text-gray-600 text-sm'>Kapashera , south west delhi </p>
+                                <p className='text-gray-600 text-sm'>{props.ridedetail?.destination} </p>
                             </div>
                         </div>
                         <div className='flex items-center gap-3 leading-tight  font-medium mt-3 p-2'>
                             <i className="ri-cash-line"></i>
                             <div >
-                                <h3>₹193.20</h3>
+                                <h3>₹{props.ridedetail?.fare}</h3>
                                 <p className='text-gray-600 text-sm'>Cash Cash</p>
                             </div>
                         </div>

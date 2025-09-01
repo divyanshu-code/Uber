@@ -131,12 +131,12 @@ const Captain_Home = () => {
           <CaptainDetails />
         </div>
 
-        <div ref={rideref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[75%] px-3'>
+        <div ref={rideref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-[80%] px-3'>
           <RidePopUp userride={userride} setride={setride} setconfirm={setconfirm} confirmride={confirmride} />
         </div>
 
         <div ref={confirmref} className='fixed bottom-0 z-10 translate-y-full bg-white w-full h-screen px-3'>
-          <ConRidePopUp  setride={setride} setconfirm={setconfirm}/>
+          <ConRidePopUp userride={userride} setride={setride} setconfirm={setconfirm}/>
         </div>
 
 
