@@ -120,7 +120,7 @@ module.exports.startride = async (req, res) => {
 
           sendMessageToSocketId(ride.user.socketId, {
 
-               event: 'ride-confirmed',
+               event: 'ride-started',
                data: ride
           })
 
@@ -130,5 +130,34 @@ module.exports.startride = async (req, res) => {
           return res.status(500).json({ message: err.message });
 
      }
-
 }
+
+module.exports.endride = async (req , res)=>{
+     const errors = validationResult(req)
+
+     if (!errors.isEmpty()) {
+          console.log("Validation errors:", errors.array());
+          return res.status(400).json({ errors: errors.array() });
+     }
+
+     const { rideId } = req.body
+
+     try {
+
+          const ride = await rideservice.Endride({ rideId, captain: req.captain });
+
+          sendMessageToSocketId(ride.user.socketId, {
+
+               event: 'ride-ended',
+               data: ride
+          })
+
+          return res.status(200).json(ride);
+
+     } catch (err) {
+          return res.status(500).json({ message: err.message });
+
+     }
+}
+
+
