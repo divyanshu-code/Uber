@@ -103,3 +103,32 @@ module.exports.confirmride = async (req, res) => {
 
      }
 }
+
+module.exports.startride = async (req, res) => {
+     const errors = validationResult(req)
+
+     if (!errors.isEmpty()) {
+          console.log("Validation errors:", errors.array());
+          return res.status(400).json({ errors: errors.array() });
+     }
+
+     const { rideId, otp } = req.query;
+
+     try {
+
+          const ride = await rideservice.Startride({ rideId, otp, captain: req.captain });
+
+          sendMessageToSocketId(ride.user.socketId, {
+
+               event: 'ride-confirmed',
+               data: ride
+          })
+
+          return res.status(200).json(ride);
+
+     } catch (err) {
+          return res.status(500).json({ message: err.message });
+
+     }
+
+}
