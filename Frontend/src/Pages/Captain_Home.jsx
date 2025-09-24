@@ -120,7 +120,7 @@ const Captain_Home = () => {
 
         <div className='fixed flex items-center justify-between w-screen  px-3'>
           <img className='w-20' src="https://www.logo.wine/a/logo/Uber/Uber-Logo.wine.svg" alt="" />
-          <Link to="/captain-login" className=' text-xl bg-white rounded-full flex items-center justify-center w-8  h-8 font-lg'>
+          <Link to="/captain-logout" className=' text-xl bg-white rounded-full flex items-center justify-center w-8  h-8 font-lg'>
             <i className="ri-logout-box-line"></i>
           </Link>
 

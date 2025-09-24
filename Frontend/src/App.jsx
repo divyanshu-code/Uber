@@ -12,10 +12,25 @@ import Captain_Home from './Pages/Captain_Home.jsx'
 import CaptainProtectedWrapper from './Pages/CaptainProtectedWrapper.jsx'
 import Riding from './Components/Riding.jsx'
 import CaptainRiding from './Pages/CaptainRiding.jsx'
+import { ToastContainer } from 'react-toastify';
+import { Zoom } from 'react-toastify'
 
 const App = () => {
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Zoom}
+      />
 
       <Routes>
 
@@ -24,8 +39,8 @@ const App = () => {
         <Route path='/signup' element={<UserSignup />} />
         <Route path='/captain-login' element={<CaptainLogin />} />
         <Route path='/captain-signup' element={<CaptainSignup />} />
-        <Route path='/riding' element={<Riding/>} />
-        <Route path='/captain-riding' element={<CaptainRiding/>} />
+        <Route path='/riding' element={<Riding />} />
+        <Route path='/captain-riding' element={<CaptainRiding />} />
         <Route path='/home' element={
           <UserProtectedWrapper>
             <Home />

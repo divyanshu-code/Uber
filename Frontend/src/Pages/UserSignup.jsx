@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { UserDataContext } from '../Context/UserContext.jsx'
+import { toast } from 'react-toastify'
+import { Zoom } from 'react-toastify'
 
 const UserSignup = () => {
   const [email, setEmail] = useState('')
@@ -27,28 +29,50 @@ const UserSignup = () => {
     }
 
     try {
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
 
-    if (response.status >= 200 && response.status < 300) {
+      if (response.status >= 200 && response.status < 300) {
 
-      const data = response.data;
+        const data = response.data;
 
-      setuser(data.user)
-      localStorage.setItem('token', data.token);
+        setuser(data.user)
+        localStorage.setItem('token', data.token);
 
-      navigate('/Home')
+        toast.success('Registered successfully', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Zoom,
+        });
 
+        setEmail('')
+        setFirstName('')
+        setLastName('')
+        setPassword('')
+
+        navigate('/login')
+      }
+    } catch (error) {
+      console.log(error);
+
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Zoom,
+      });
     }
-  } catch (error) {
-      if (error.response) {
-        console.error("Registration failed:", error.response.data);
 
-      }}
-
-    setEmail('')
-    setFirstName('')
-    setLastName('')
-    setPassword('')
 
   }
   return (

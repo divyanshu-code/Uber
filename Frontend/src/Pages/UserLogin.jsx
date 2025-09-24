@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { UserDataContext } from '../Context/UserContext.jsx'
 import axios from 'axios'
+import { toast } from 'react-toastify'
+import { Zoom } from 'react-toastify'
 
 const UserLogin = () => {
 
@@ -11,9 +13,9 @@ const UserLogin = () => {
 
   const navigate = useNavigate();
 
-  const { user ,setuser } = useContext(UserDataContext)
+  const { user, setuser } = useContext(UserDataContext)
 
-  const handleLogin =async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     const newUser = {
@@ -21,18 +23,50 @@ const UserLogin = () => {
       password: password
     }
 
-    const response =await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, newUser)
 
-    if (response.status >= 200 && response.status < 300) {
-      const data = response.data;
+    try {
 
-      setuser(data.user);
-      localStorage.setItem('token', data.token);
-      navigate('/Home');
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, newUser)
+      if (response.status >= 200 && response.status < 300) {
+        const data = response.data;
+
+        setuser(data.user);
+        localStorage.setItem('token', data.token);
+        
+        toast.success('Login successfull', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Zoom,
+        });
+        
+        setPassword('');
+        emailfirst('');
+        
+        navigate('/home');
+      }
+    } catch (error) {
+
+      console.log(error);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Zoom,
+      });
+
     }
 
-    setPassword('');
-    emailfirst('');
   }
 
   return (

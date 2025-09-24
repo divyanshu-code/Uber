@@ -12,7 +12,7 @@ import WaitingForDriver from '../Components/WaitingForDriver'
 import axios from 'axios';
 import { UserDataContext } from '../Context/UserContext'
 import { Socket } from '../Context/SocketContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Home = () => {
 
@@ -56,10 +56,10 @@ const Home = () => {
 
   });
 
-  socket.on('ride-started' , (ride)=>{
-    
+  socket.on('ride-started', (ride) => {
+
     setwaitingfordriver(false);
-    navigate('/riding' , { state : { ride : ride } });
+    navigate('/riding', { state: { ride: ride } });
 
   })
 
